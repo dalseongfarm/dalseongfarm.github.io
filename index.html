@@ -50,6 +50,7 @@
   --berry:#FF7A92;--berry-deep:#FF9AAE;--berry-soft:#43303A;--leaf:#8ED7A8;--leaf-soft:#2B3D33;--butter:#5B4B26;--shadow:#1E1418;--on-berry:#2A0E15;color-scheme:dark}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background-color:var(--bg);background-image:radial-gradient(var(--dot) 22%,transparent 23%),radial-gradient(var(--dot) 22%,transparent 23%);background-size:40px 40px;background-position:0 0,20px 20px;color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.75;word-break:keep-all;overflow-x:hidden}
 .wrap{max-width:1040px;margin:0 auto;padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
 h1,h2,h3,b,strong,.btn,.tab{font-family:var(--display);font-weight:400}
@@ -217,6 +218,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--berry)}
 .small{font-size:13px;color:var(--muted)}
 .result{border-radius:20px;padding:16px;font-size:15px;background:var(--surface)}
 .result.ok{background:var(--leaf-soft)}
+.eta{display:flex;gap:12px;align-items:center;background:var(--leaf-soft);color:var(--leaf);border-radius:18px;padding:12px 16px;margin-top:4px}
+.eta b{display:block;font-size:16px}
+.eta span{color:var(--ink);font-size:15px}
+.sum-eta{font-size:14px;color:var(--leaf);font-family:var(--display)}
 .result.send{background:var(--surface);border:3px solid var(--berry);display:grid;gap:10px}
 .result.send b{font-size:18px;color:var(--berry)}
 .send-row{display:flex;flex-wrap:wrap;gap:8px}
@@ -438,6 +443,10 @@ footer .biz span.nw{white-space:nowrap}
               <label><input type="radio" name="ship" id="ship-direct" value="목포·남악 직배송"><span>🚚 목포·남악 직배송 (+2,000원)</span></label>
               <label><input type="radio" name="ship" id="ship-pickup" value="농장 방문 수령"><span>🏡 농장 방문 수령</span></label>
             </div>
+            <div class="eta" id="eta" hidden>
+              <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="15" r="2" fill="currentColor"/></svg>
+              <div><b id="eta-title">예상 배송</b><span id="eta-text"></span></div>
+            </div>
           </fieldset>
 
           <fieldset id="exp-set" hidden>
@@ -462,7 +471,6 @@ footer .biz span.nw{white-space:nowrap}
               <label class="field"><span>연락처 *</span><input type="tel" id="phone" name="phone" autocomplete="tel" placeholder="010-0000-0000" required></label>
             </div>
             <label class="field" id="addr-field"><span>받으실 주소 *</span><input type="text" id="address" name="address" autocomplete="street-address"></label>
-            <label class="field" id="wish-field"><span>받고 싶은 날짜 (선택)</span><input type="date" id="wish-date" name="wish-date"></label>
             <label class="field"><span>요청사항 (선택)</span><textarea id="memo" name="memo" placeholder="선물 포장, 배송 메시지 등"></textarea></label>
           </fieldset>
 
@@ -479,6 +487,7 @@ footer .biz span.nw{white-space:nowrap}
             <div id="t-ship-row" hidden><span>직배송비</span><span>+2,000원</span></div>
             <div class="final"><span>예상 금액</span><span id="t-final">0원</span></div>
           </div>
+          <p class="sum-eta" id="sum-eta" hidden></p>
           <p class="small" id="ship-note">택배비가 포함된 가격이에요.</p>
           <button class="btn primary" type="submit" id="submit" disabled>주문서 보내기</button>
           <div id="result" hidden></div>
@@ -579,6 +588,9 @@ const ADDRESS_DETAIL = "삼층석탑길 194";          // 팔금면 뒤에 붙�
 const BANK = "농협 351-1413-9606-83 (달성팜)";    // 입금 계좌
 const DISCOUNT = 0.10;                           // 홈페이지 직거래 할인율
 const DIRECT_FEE = 2000;                         // 목포·남악 직배송비
+// 딸기 수확 예정일 ("연-월-일"). 손님이 주문한 날 다음의 가장 가까운 수확일에 맞춰 예상 배송일을 보여줘요.
+const HARVEST_DATES = [];
+const NO_HARVEST_TEXT = "첫 수확은 12월 예정이에요. 수확일이 정해지면 문자로 배송일을 안내드려요.";
 const PRODUCTS = {                               // price: 정상가(택배비 포함). null이면 "별도 안내"
   berry: [
     { id:"b1", name:"딸기 선물용 750g 내외", directName:"딸기 1kg (목포·남악 직배송)", price:30000, unit:"상자" }
@@ -653,7 +665,37 @@ function renderSummary(){
     s === "택배" ? "택배비가 포함된 가격이에요." :
     s === "농장 방문 수령" ? "농장에 오셔서 받아가세요. 받으실 시간은 문자로 안내드려요." :
     "목포·남악은 1kg 상자를 농장에서 직접 가져다드려요. 직배송비 2,000원이 더해져요.";
+  renderEta();
   return { lines, list, fin, ship, priced };
+}
+
+/* 예상 배송일 계산 */
+const WD = ["일","월","화","수","목","금","토"];
+const fmt = d => `${d.getMonth()+1}월 ${d.getDate()}일 (${WD[d.getDay()]})`;
+function nextHarvest(){
+  const now = new Date(); now.setHours(0,0,0,0);
+  return HARVEST_DATES.map(v => new Date(v + "T00:00:00")).filter(d => d > now).sort((a,b) => a - b)[0] || null;
+}
+function deliveryInfo(){
+  if (kind !== "berry") return null;
+  const h = nextHarvest();
+  if (!h) return { text: NO_HARVEST_TEXT, short: "" };
+  const m = shipMethod();
+  if (m === "택배"){
+    const arr = new Date(h); arr.setDate(arr.getDate() + 1);
+    if (arr.getDay() === 0) arr.setDate(arr.getDate() + 1);   // 일요일은 택배가 쉬어요
+    return { text: `${fmt(h)} 수확해서 바로 발송 → ${fmt(arr)} 도착 예정`, short: `${fmt(arr)} 도착 예정` };
+  }
+  if (m === "목포·남악 직배송") return { text: `${fmt(h)} 수확한 날 직접 가져다드려요`, short: `${fmt(h)} 직배송 예정` };
+  return { text: `${fmt(h)} 수확한 날부터 농장에서 받아가실 수 있어요`, short: `${fmt(h)}부터 수령 가능` };
+}
+function renderEta(){
+  const info = deliveryInfo();
+  $("eta").hidden = !info;
+  if (info){ $("eta-text").textContent = info.text; }
+  const hasItems = PRODUCTS[kind].some(p => qty[p.id]);
+  $("sum-eta").hidden = !(info && info.short && hasItems);
+  if (info) $("sum-eta").textContent = "🚚 " + info.short;
 }
 
 function setKind(k){
@@ -661,7 +703,6 @@ function setKind(k){
   document.querySelectorAll(".tab").forEach(t => t.setAttribute("aria-selected", t.dataset.kind === k));
   $("ship-set").hidden = k === "exp";
   $("exp-set").hidden = k !== "exp";
-  $("wish-field").hidden = k === "exp";
   updateAddr();
   $("result").hidden = true;
   renderItems();
@@ -677,7 +718,7 @@ document.querySelectorAll('a[data-kind]').forEach(a => a.addEventListener("click
 document.querySelectorAll('input[name="ship"]').forEach(r => r.addEventListener("change", () => { updateAddr(); renderItems(); }));
 
 const today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
-$("exp-date").min = $("wish-date").min = today.toISOString().slice(0,10);
+$("exp-date").min = today.toISOString().slice(0,10);
 
 /* 체험 날짜 확인: 월요일 휴무, 2월 20일 ~ 5월 31일 운영 */
 function expDateProblem(v){
@@ -736,7 +777,8 @@ $("order-form").addEventListener("submit", async e => {
   } else {
     data["받는 방법"] = shipMethod();
     if ($("address").required) data["주소"] = $("address").value.trim();
-    if ($("wish-date").value) data["희망 날짜"] = $("wish-date").value;
+    const eta = deliveryInfo();
+    if (eta) data["예상 배송"] = eta.text;
   }
   if ($("memo").value.trim()) data["요청사항"] = $("memo").value.trim();
 
