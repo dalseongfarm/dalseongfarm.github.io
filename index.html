@@ -748,7 +748,7 @@ $("order-form").addEventListener("submit", async e => {
     });
     let j = {};
     try{ j = await r.json(); }catch(e){}
-    if (!r.ok || String(j.success) === "false") throw new Error(j.message || "send failed");
+    if (!r.ok || String(j.success) === "false") throw new Error((j.message || "응답 없음") + " [" + r.status + "]");
     res.hidden = false; res.className = "result ok";
     res.innerHTML = "";
     const h = document.createElement("b"); h.textContent = kind === "exp" ? "예약 신청이 접수됐어요!" : "주문이 접수됐어요!";
@@ -783,7 +783,9 @@ $("order-form").addEventListener("submit", async e => {
     const p2 = document.createElement("p"); p2.className = "small";
     p2.textContent = `문자가 안 열리면 내용을 복사해서 ${FARM_PHONE}로 보내거나, 인스타그램 @dal_seong_farm 메시지로 보내주세요.`
       + (priced ? ` 입금 계좌: ${BANK}` : "");
-    res.append(h, p1, pre, row, p2);
+    const why = document.createElement("p"); why.className = "small"; why.style.opacity = ".6";
+    why.textContent = "전송 확인 코드: " + (err && err.message ? err.message : "알 수 없음") + " · " + location.hostname;
+    res.append(h, p1, pre, row, p2, why);
     renderSummary();
     res.scrollIntoView({ block: "nearest" });
   }
