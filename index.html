@@ -217,6 +217,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--berry)}
 .small{font-size:13px;color:var(--muted)}
 .result{border-radius:20px;padding:16px;font-size:15px;background:var(--surface)}
 .result.ok{background:var(--leaf-soft)}
+.result.send{background:var(--surface);border:3px solid var(--berry);display:grid;gap:10px}
+.result.send b{font-size:18px;color:var(--berry)}
+.send-row{display:flex;flex-wrap:wrap;gap:8px}
+.send-row .btn{flex:1 1 160px;padding:12px 16px;font-size:16px}
 .result pre{white-space:pre-wrap;font:inherit;font-size:13px;margin:10px 0;max-height:180px;overflow:auto;background:var(--berry-soft);padding:10px;border-radius:12px}
 .result .btn{padding:8px 16px;font-size:14px;width:auto}
 
@@ -742,29 +746,46 @@ $("order-form").addEventListener("submit", async e => {
     const r = await fetch("https://formsubmit.co/ajax/" + ORDER_EMAIL, {
       method:"POST", headers:{ "Content-Type":"application/json", "Accept":"application/json" }, body: JSON.stringify(data)
     });
-    if (!r.ok) throw new Error("send failed");
+    let j = {};
+    try{ j = await r.json(); }catch(e){}
+    if (!r.ok || String(j.success) === "false") throw new Error(j.message || "send failed");
     res.hidden = false; res.className = "result ok";
     res.innerHTML = "";
     const h = document.createElement("b"); h.textContent = kind === "exp" ? "예약 신청이 접수됐어요!" : "주문이 접수됐어요!";
     const p1 = document.createElement("p");
     p1.textContent = priced
       ? `${won(fin + ship)}을 ${BANK}로 입금해 주세요. 입금이 확인되면 문자로 알려드릴게요.`
-      : "농장에서 확인한 뒤 체험비와 예약 확정을 문자로 알려드릴게요.";
+      : "농장에서 확인한 뒤 예약 확정을 문자로 알려드릴게요.";
     res.append(h, p1);
     PRODUCTS[kind].forEach(p => qty[p.id] = 0);
     renderItems();
     res.hidden = false;
   }catch(err){
-    const text = Object.entries(data).filter(([k]) => !k.startsWith("_")).map(([k,v]) => `${k}: ${v}`).join("\n");
-    res.hidden = false; res.className = "result warn";
-    res.innerHTML = "<b>지금은 주문서가 전송되지 않았어요.</b><br>아래 내용을 복사해서 문자나 인스타그램 메시지로 보내주세요.<pre></pre><button type='button' class='btn' id='copy-order'>내용 복사</button>";
-    res.querySelector("pre").textContent = text;
-    $("copy-order").onclick = () => {
-      const pre = res.querySelector("pre");
+    /* 메일 전송이 안 되면 문자로 바로 보낼 수 있게 안내 */
+    const text = "[달성팜 " + LABEL[kind] + "]\n" + Object.entries(data).filter(([k]) => !k.startsWith("_") && k !== "구분").map(([k,v]) => `${k}: ${v}`).join("\n");
+    const tel = FARM_PHONE.replace(/[^0-9]/g, "");
+    res.hidden = false; res.className = "result send";
+    res.innerHTML = "";
+    const h = document.createElement("b"); h.textContent = "마지막으로, 주문 내용을 농장에 보내주세요";
+    const p1 = document.createElement("p"); p1.className = "small";
+    p1.textContent = "아래 버튼을 누르면 주문 내용이 담긴 문자가 열려요. 전송만 누르시면 끝이에요.";
+    const pre = document.createElement("pre"); pre.textContent = text;
+    const row = document.createElement("div"); row.className = "send-row";
+    const sms = document.createElement("a"); sms.className = "btn primary";
+    sms.href = "sms:" + tel + "?&body=" + encodeURIComponent(text);
+    sms.textContent = "💬 문자로 주문 보내기";
+    const cp = document.createElement("button"); cp.type = "button"; cp.className = "btn"; cp.textContent = "내용 복사";
+    cp.onclick = () => {
       const sel = () => { const rg=document.createRange(); rg.selectNodeContents(pre); const s=getSelection(); s.removeAllRanges(); s.addRange(rg); };
-      try{ navigator.clipboard.writeText(text).then(() => $("copy-order").textContent = "복사됨", sel); }catch(e){ sel(); }
+      try{ navigator.clipboard.writeText(text).then(() => cp.textContent = "복사됐어요", sel); }catch(e){ sel(); }
     };
+    row.append(sms, cp);
+    const p2 = document.createElement("p"); p2.className = "small";
+    p2.textContent = `문자가 안 열리면 내용을 복사해서 ${FARM_PHONE}로 보내거나, 인스타그램 @dal_seong_farm 메시지로 보내주세요.`
+      + (priced ? ` 입금 계좌: ${BANK}` : "");
+    res.append(h, p1, pre, row, p2);
     renderSummary();
+    res.scrollIntoView({ block: "nearest" });
   }
 });
 
