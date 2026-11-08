@@ -496,7 +496,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         <h3>딸기 · 주문</h3>
         <details><summary>딸기는 언제 받을 수 있나요?</summary><p>주문하신 날 이후 가장 가까운 수확일에 따서 바로 보내드려요. 장바구니에서 예상 배송일을 확인할 수 있어요.</p></details>
         <details><summary>결제는 어떻게 하나요?</summary><p>주문서를 보내신 뒤 농협 351-1413-9606-83 (달성팜)으로 입금해 주세요. 입금이 확인되면 준비를 시작해요.</p></details>
-        <details><summary>택배비가 따로 있나요?</summary><p>딸기와 크런치바는 택배비가 포함된 가격이에요. 목포·남악은 1kg 상자를 직접 가져다드리고 직배송비 2,000원이 붙어요.</p></details>
+        <details><summary>택배비가 따로 있나요?</summary><p>딸기와 크런치바는 택배비가 포함된 가격이에요. 목포·남악은 1kg 상자를 직접 가져다드려요. 직배송비는 따로 없어요.</p></details>
         <details><summary>받은 딸기는 어떻게 보관하나요?</summary><p>받으시면 바로 냉장고에 넣어 주세요. 드시기 직전에 씻고, 꼭지는 씻은 뒤에 떼어 주세요. 2~3일 안에 드시면 가장 맛있어요.</p></details>
         <details><summary>딸기가 눌리거나 상해서 왔어요.</summary><p>받으신 날 상자와 딸기 사진을 찍어 문자로 보내주세요. 확인한 뒤 교환이나 환불을 안내드릴게요.</p></details>
       </div>
@@ -539,7 +539,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         <h3>배송</h3>
         <ul>
           <li>딸기는 수확일에 맞춰 발송하고, 다음 날 도착해요. 일요일은 택배가 쉬어요.</li>
-          <li>목포·남악은 농장에서 직접 가져다드려요 (직배송비 2,000원).</li>
+          <li>목포·남악은 1kg 상자를 농장에서 직접 가져다드려요. 직배송비는 따로 없어요.</li>
           <li>입금이 확인된 주문부터 차례로 보내드려요.</li>
         </ul>
         <h3>교환 · 반품</h3>
@@ -595,7 +595,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
       <legend>받으시는 방법</legend>
       <div class="choices">
         <label><input type="radio" name="ship" id="ship-parcel" value="택배" checked><span>📦 택배</span></label>
-        <label><input type="radio" name="ship" id="ship-direct" value="목포·남악 직배송"><span>🚚 목포·남악 직배송 (+2,000원)</span></label>
+        <label><input type="radio" name="ship" id="ship-direct" value="목포·남악 직배송"><span>🚚 목포·남악 직배송 (1kg)</span></label>
         <label><input type="radio" name="ship" id="ship-pickup" value="농장 방문 수령"><span>🏡 농장 방문 수령</span></label>
       </div>
       <div class="eta" id="eta" hidden>
@@ -651,7 +651,7 @@ const ORDER_EMAIL = "9101kjs@gmail.com";        // 주문서를 받을 Gmail
 const FARM_PHONE = "010-2679-9101";
 const BANK = "농협 351-1413-9606-83";            // 입금 계좌 (예금주 달성팜)
 const DISCOUNT = 0.10;                           // 홈페이지 직거래 할인율
-const DIRECT_FEE = 2000;                         // 목포·남악 직배송비
+const DIRECT_FEE = 0;                         // 목포·남악 직배송비
 const EXP_PRICE = 20000;                         // 체험비 1인 정상가
 // 딸기 수확 예정일 ("연-월-일"). 주문한 날 다음의 가장 가까운 수확일로 예상 배송일을 보여줘요.
 const HARVEST_DATES = [];
