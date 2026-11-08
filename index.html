@@ -277,6 +277,22 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
 .exp-gallery img,.exp-gallery video{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;display:block;background:var(--berry-soft)}
 @media (max-width:640px){.exp-gallery{gap:6px}}
 
+/* 사진이 잘리지 않게: 원래 비율 그대로 */
+.prod .ph{aspect-ratio:3/4;background:var(--surface)}
+.prod .ph img{object-fit:contain}
+.hero-media{aspect-ratio:9/16;max-height:640px;width:auto;justify-self:center;background:var(--surface)}
+.hero-video{object-fit:contain}
+@media (max-width:820px){.hero-media{aspect-ratio:9/16;width:min(100%,340px);max-height:none;margin:0 auto}}
+.fresh .fm{aspect-ratio:auto;background:none}
+.fresh .fm img,.fresh .fm video{height:auto;object-fit:initial}
+.fresh{align-items:start}
+.photo{aspect-ratio:auto}
+.photo img{height:auto;object-fit:initial;display:block}
+.mini{align-items:start}
+.mini img{aspect-ratio:auto;height:auto;object-fit:initial}
+.exp-gallery{align-items:start}
+.exp-gallery img,.exp-gallery video{aspect-ratio:auto;height:auto;object-fit:initial}
+
 /* 장바구니 */
 .scrim{position:fixed;inset:0;background:color-mix(in srgb,var(--ink) 40%,transparent);z-index:20}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--bg);z-index:21;display:flex;flex-direction:column;box-shadow:-1px 0 0 var(--line);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
@@ -381,7 +397,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         </div>
       </article>
       <article class="prod">
-        <div class="ph"><span class="badge new">NEW</span><img src="img/crunch-box.jpg" alt="달성팜 단백질 크런치바 딸기맛 10개입 상자" loading="lazy" style="object-position:center 40%"></div>
+        <div class="ph"><span class="badge new">NEW</span><img src="img/crunch-box.jpg" alt="달성팜 단백질 크런치바 딸기맛 10개입 상자" loading="lazy"></div>
         <div class="bd">
           <h3>딸기 단백질 크런치바</h3>
           <p class="opt">딸기맛 · 10개입 (100g)</p>
@@ -393,7 +409,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
       <article class="prod">
         <div class="ph">
           <span class="badge green">2월 말 – 5월</span>
-          <img src="img/exp-pick.jpg" alt="하우스에서 딸기를 따는 아이의 손" loading="lazy" style="object-position:center 60%">
+          <img src="img/exp-walk.jpg" alt="체험장으로 걸어가는 아이들 뒷모습" loading="lazy">
         </div>
         <div class="bd">
           <h3>딸기 수확체험</h3>
