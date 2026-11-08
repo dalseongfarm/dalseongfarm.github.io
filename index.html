@@ -98,7 +98,13 @@ section{padding-block:64px}
 .head p{color:var(--muted)}
 
 /* 상품 */
-.notice{max-width:640px;margin:0 auto 22px;background:var(--berry-soft);border:0;border-radius:12px;padding:12px 18px;text-align:center;font-family:var(--display);font-weight:400;color:var(--berry)}
+.flow{list-style:none;margin:0 auto 8px;padding:0;max-width:640px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;counter-reset:none}
+.flow li{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 8px;text-align:center;font-size:14px;display:grid;gap:4px;justify-items:center}
+.flow li b{width:24px;height:24px;border-radius:6px;background:var(--berry);color:var(--on-berry);display:grid;place-items:center;font-size:13px}
+.panel .flow{margin:0;max-width:none}
+.flow-note{text-align:center;margin:0 auto 22px}
+.status{display:inline-block;background:var(--butter);color:var(--ink);border-radius:6px;padding:3px 10px;font-size:13px;font-family:var(--display)}
+.notice{max-width:640px;margin:0 auto 12px;background:var(--berry-soft);border:0;border-radius:12px;padding:12px 18px;text-align:center;font-family:var(--display);font-weight:400;color:var(--berry)}
 .shop{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .prod{background:var(--surface);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 1px 3px var(--shadow);border:1px solid var(--line);min-width:0}
 .prod .ph{position:relative;aspect-ratio:4/3;background:var(--berry-soft);display:grid;place-items:center;overflow:hidden}
@@ -331,6 +337,8 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
       <p>장바구니에 담아서 한 번에 주문하세요.</p>
     </div>
     <p class="notice">홈페이지 주문 10% 할인 · 딸기와 크런치바는 택배비 포함</p>
+    <ol class="flow"><li><b>1</b>장바구니에서 주문서 보내기</li><li><b>2</b>계좌로 입금</li><li><b>3</b>입금 확인 후 확정 문자</li></ol>
+    <p class="small flow-note">딸기·크런치바·체험 모두 <b>입금이 확인된 뒤에</b> 주문과 예약이 확정돼요.</p>
     <div class="shop">
       <article class="prod">
         <div class="ph">
@@ -452,6 +460,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         </dl>
       </div>
       <form class="panel" id="exp-form" novalidate>
+        <ol class="flow"><li><b>1</b>예약 신청</li><li><b>2</b>계좌로 입금</li><li><b>3</b>입금 확인 후 예약 확정</li></ol>
         <fieldset>
           <legend>체험 일정</legend>
           <div class="row2">
@@ -475,6 +484,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
             <label class="field"><span>이름 *</span><input type="text" id="exp-name" autocomplete="name"></label>
             <label class="field"><span>연락처 *</span><input type="tel" id="exp-phone" autocomplete="tel" placeholder="010-0000-0000"></label>
           </div>
+          <label class="field"><span>입금자명 (예약자와 다를 때만)</span><input type="text" id="exp-payer" placeholder="비워두면 예약자 이름으로 확인해요"></label>
           <label class="field"><span>요청사항 (선택)</span><textarea id="exp-memo" placeholder="단체명, 아이 나이 등"></textarea></label>
         </fieldset>
         <label class="agree"><input type="checkbox" id="exp-agree"><span>예약 처리와 연락을 위해 이름과 연락처를 수집하는 데 동의합니다. 처리 후 1년 동안 보관합니다.</span></label>
@@ -496,7 +506,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
       <div class="faq-group">
         <h3>딸기 · 주문</h3>
         <details><summary>딸기는 언제 받을 수 있나요?</summary><p>주문하신 날 이후 가장 가까운 수확일에 따서 바로 보내드려요. 장바구니에서 예상 배송일을 확인할 수 있어요.</p></details>
-        <details><summary>결제는 어떻게 하나요?</summary><p>주문서를 보내신 뒤 농협 351-1413-9606-83 (달성팜)으로 입금해 주세요. 입금이 확인되면 준비를 시작해요.</p></details>
+        <details><summary>결제는 어떻게 하나요?</summary><p>주문서나 예약 신청을 보내신 뒤 농협 351-1413-9606-83 (달성팜)으로 입금해 주세요. 입금이 확인되면 주문과 예약이 확정되고 문자로 알려드려요. 24시간 안에 입금이 없으면 취소돼요.</p></details>
         <details><summary>택배비가 따로 있나요?</summary><p>딸기와 크런치바는 택배비가 포함된 가격이에요. 목포·남악은 1kg 상자를 직접 가져다드려요. 직배송비는 따로 없어요.</p></details>
         <details><summary>받은 딸기는 어떻게 보관하나요?</summary><p>받으시면 바로 냉장고에 넣어 주세요. 드시기 직전에 씻고, 꼭지는 씻은 뒤에 떼어 주세요. 2~3일 안에 드시면 가장 맛있어요.</p></details>
         <details><summary>딸기가 눌리거나 상해서 왔어요.</summary><p>받으신 날 상자와 딸기 사진을 찍어 문자로 보내주세요. 확인한 뒤 교환이나 환불을 안내드릴게요.</p></details>
@@ -613,6 +623,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         <label class="field"><span>이름 *</span><input type="text" id="name" autocomplete="name"></label>
         <label class="field"><span>연락처 *</span><input type="tel" id="phone" autocomplete="tel" placeholder="010-0000-0000"></label>
       </div>
+      <label class="field"><span>입금자명 (주문자와 다를 때만)</span><input type="text" id="payer" placeholder="비워두면 주문자 이름으로 확인해요"></label>
       <label class="field" id="addr-field"><span>받으실 주소 *</span><input type="text" id="address" autocomplete="street-address"></label>
       <label class="field"><span>요청사항 (선택)</span><textarea id="memo" placeholder="선물 포장, 배송 메시지 등"></textarea></label>
     </fieldset>
@@ -622,13 +633,17 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
 
   <div class="db" id="step-done" hidden>
     <div class="done">
-      <h3>주문이 접수됐어요!</h3>
-      <p>아래 계좌로 입금해 주시면, 확인 후 문자로 알려드릴게요.</p>
+      <span class="status">입금 대기</span>
+      <h3>주문서가 접수됐어요</h3>
+      <p>아래 계좌로 입금해 주세요. <b>입금이 확인되면 주문이 확정</b>되고 문자로 알려드려요.</p>
       <div class="pay">
         <div><span>입금할 금액</span><b id="done-amount">0원</b></div>
         <div><span>입금 계좌</span><b id="done-bank"></b></div>
         <div><span>예금주</span><b>달성팜</b></div>
+        <div><span>입금자명</span><b id="done-payer"></b></div>
+        <div><span>입금 기한</span><b id="done-deadline"></b></div>
       </div>
+      <p class="small">기한까지 입금이 없으면 주문이 취소돼요.</p>
       <button class="btn primary" type="button" id="copy-pay">계좌와 금액 복사</button>
       <p class="small" id="done-eta"></p>
     </div>
@@ -651,6 +666,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
 const ORDER_EMAIL = "9101kjs@gmail.com";        // 주문서를 받을 Gmail
 const FARM_PHONE = "010-2679-9101";
 const BANK = "농협 351-1413-9606-83";            // 입금 계좌 (예금주 달성팜)
+const PAY_HOURS = 24;                            // 입금 기한 (주문 후 몇 시간)
 const DISCOUNT = 0.10;                           // 홈페이지 직거래 할인율
 const DIRECT_FEE = 0;                         // 목포·남악 직배송비
 const EXP_PRICE = 20000;                         // 체험비 1인 정상가
@@ -680,6 +696,7 @@ const MONTHS = [
 
 const $ = id => document.getElementById(id);
 const won = n => n.toLocaleString("ko-KR") + "원";
+const deadline = () => { const d = new Date(Date.now() + PAY_HOURS*3600e3); return `${d.getMonth()+1}월 ${d.getDate()}일 ${d.getHours()}시 ${String(d.getMinutes()).padStart(2,"0")}분까지`; };
 const off = p => Math.round(p * (1 - DISCOUNT) / 10) * 10;
 const cart = { berry:0, bar:0 };
 try{ const saved = JSON.parse(localStorage.getItem("dsf-cart") || "{}"); for (const k in cart) if (saved[k] > 0) cart[k] = Math.min(50, saved[k]|0); }catch(e){}
@@ -764,7 +781,7 @@ function setStep(n){
   step = n;
   $("step-cart").hidden = n !== 1; $("step-order").hidden = n !== 2; $("step-done").hidden = n !== 3;
   ["st1","st2","st3"].forEach((id,i) => $(id).classList.toggle("on", i === n-1));
-  $("drawer-title").textContent = n === 1 ? "장바구니" : n === 2 ? "주문서" : "주문 완료";
+  $("drawer-title").textContent = n === 1 ? "장바구니" : n === 2 ? "주문서" : "입금 안내";
   $("back-btn").hidden = n !== 2;
   $("tot").hidden = n === 3;
   $("next-btn").hidden = n === 3;
@@ -823,12 +840,13 @@ async function submitOrder(){
   if (missing.length){ res.hidden = false; res.className = "result warn"; res.textContent = missing.join(", ") + "을(를) 입력해 주세요."; return; }
   const items = Object.keys(cart).filter(k => cart[k]).map(k => `${nameOf(k)} × ${cart[k]} = ${won(off(PRODUCTS[k].price) * cart[k])}`).join("\n");
   const data = {
-    _subject: `[달성팜] 주문 - ${$("name").value.trim()}`, _template:"table", _captcha:"false",
-    "구분":"상품 주문", "이름":$("name").value.trim(), "연락처":$("phone").value.trim(), "주문 내역":items,
+    _subject: `[달성팜][입금대기] 주문 - ${$("name").value.trim()}`, _template:"table", _captcha:"false",
+    "구분":"상품 주문", "상태":"입금 대기", "이름":$("name").value.trim(), "입금자명":($("payer").value.trim() || $("name").value.trim()), "연락처":$("phone").value.trim(), "주문 내역":items,
     "정상가":won(t.list), "직거래 할인(10%)":"-" + won(t.list - t.fin)
   };
   if (t.ship) data["직배송비"] = won(t.ship);
   data["입금할 금액"] = won(t.pay);
+  const due = deadline(); data["입금 기한"] = due;
   data["받는 방법"] = shipMethod();
   if (needAddr) data["주소"] = $("address").value.trim();
   if (cart.berry) data["딸기 예상 배송"] = deliveryInfo().text;
@@ -837,12 +855,13 @@ async function submitOrder(){
   try{
     await sendMail(data);
     $("done-amount").textContent = won(t.pay); $("done-bank").textContent = BANK;
+    $("done-payer").textContent = data["입금자명"]; $("done-deadline").textContent = due;
     $("done-eta").textContent = cart.berry ? "딸기 " + (deliveryInfo().short || "배송일은 문자로 안내드려요") : "";
     $("copy-pay").onclick = () => copyText(`${BANK} 달성팜 ${won(t.pay)}`, $("done-bank"), $("copy-pay"));
     for (const k in cart) cart[k] = 0; saveCart(); renderCart();
     res.hidden = true; setStep(3);
   }catch(err){
-    smsFallback(res, "상품 주문", data, err, ` 입금 계좌: ${BANK} (달성팜) · 입금할 금액 ${won(t.pay)}`);
+    smsFallback(res, "상품 주문", data, err, ` 입금 계좌: ${BANK} (달성팜) · 입금할 금액 ${won(t.pay)} · ${due} 입금해 주시면 확인 후 주문이 확정돼요.`);
   }finally{
     btn.disabled = false; if (step === 2) btn.textContent = "주문서 보내기";
   }
@@ -909,24 +928,31 @@ $("exp-form").addEventListener("submit", async e => {
   if (dp){ r.hidden = false; r.className = "result warn"; r.textContent = dp; return; }
   const n = expQty.adult + expQty.child, pay = off(EXP_PRICE) * n;
   const data = {
-    _subject:`[달성팜] 체험 예약 - ${$("exp-name").value.trim()}`, _template:"table", _captcha:"false",
-    "구분":"수확체험 예약", "이름":$("exp-name").value.trim(), "연락처":$("exp-phone").value.trim(),
+    _subject:`[달성팜][입금대기] 체험 예약 - ${$("exp-name").value.trim()}`, _template:"table", _captcha:"false",
+    "구분":"수확체험 예약", "상태":"입금 대기", "이름":$("exp-name").value.trim(), "입금자명":($("exp-payer").value.trim() || $("exp-name").value.trim()), "연락처":$("exp-phone").value.trim(),
     "체험 날짜":$("exp-date").value, "시간":$("exp-time").value, "구분(단체)":document.querySelector('input[name="group"]:checked').value,
     "인원":`어른 ${expQty.adult}명, 어린이 ${expQty.child}명`, "정상가":won(EXP_PRICE * n), "직거래 할인(10%)":"-" + won(EXP_PRICE * n - pay), "입금할 금액":won(pay)
   };
+  const due = deadline(); data["입금 기한"] = due;
   if ($("exp-memo").value.trim()) data["요청사항"] = $("exp-memo").value.trim();
   const b = $("exp-submit"); b.disabled = true; b.textContent = "보내는 중…";
   try{
     await sendMail(data);
     r.hidden = false; r.className = "result"; r.innerHTML = "";
-    const h = document.createElement("b"); h.textContent = "예약 신청이 접수됐어요!";
-    const p = document.createElement("p"); p.textContent = `${won(pay)}을 ${BANK} (달성팜)으로 입금해 주시면 예약 확정 문자를 드릴게요.`;
-    const c = document.createElement("button"); c.type = "button"; c.className = "btn"; c.textContent = "계좌와 금액 복사";
-    c.onclick = () => copyText(`${BANK} 달성팜 ${won(pay)}`, p, c);
-    r.append(h, p, c);
+    const st = document.createElement("span"); st.className = "status"; st.textContent = "입금 대기";
+    const h = document.createElement("b"); h.textContent = "예약 신청이 접수됐어요";
+    const p = document.createElement("p"); p.textContent = `아래 계좌로 입금해 주세요. 입금이 확인되면 예약이 확정되고 문자로 알려드려요.`;
+    const box = document.createElement("div"); box.className = "pay";
+    [["입금할 금액", won(pay)], ["입금 계좌", BANK], ["예금주", "달성팜"], ["입금자명", data["입금자명"]], ["입금 기한", due]].forEach(([k,v]) => {
+      const d = document.createElement("div"); const a = document.createElement("span"); a.textContent = k; const bb = document.createElement("b"); bb.textContent = v; d.append(a, bb); box.appendChild(d);
+    });
+    const c = document.createElement("button"); c.type = "button"; c.className = "btn primary"; c.textContent = "계좌와 금액 복사";
+    c.onclick = () => copyText(`${BANK} 달성팜 ${won(pay)}`, box, c);
+    const n2 = document.createElement("p"); n2.className = "small"; n2.textContent = "기한까지 입금이 없으면 예약이 취소돼요.";
+    r.append(st, h, p, box, c, n2);
     expQty.adult = expQty.child = 0; renderExp();
   }catch(err){
-    smsFallback(r, "수확체험 예약", data, err, ` 입금 계좌: ${BANK} (달성팜) · 입금할 금액 ${won(pay)}`);
+    smsFallback(r, "수확체험 예약", data, err, ` 입금 계좌: ${BANK} (달성팜) · 입금할 금액 ${won(pay)} · ${due} 입금해 주시면 확인 후 예약이 확정돼요.`);
   }finally{
     b.textContent = "체험 예약 신청하기"; b.disabled = !(expQty.adult + expQty.child);
   }
