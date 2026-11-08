@@ -664,6 +664,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
 <script>
 /* ===== 설정: 여기만 고치면 됩니다 ===== */
 const ORDER_EMAIL = "9101kjs@gmail.com";        // 주문서를 받을 Gmail
+const SHEET_URL = "https://script.google.com/macros/s/AKfycbx9X6Z_ML0l1oGiPqIxtfJqgIXLAF8DfFBCypOfQRd-KMEFvg4aK1BJchT3o_LZtIoZIQ/exec";                            // 구글 시트 웹앱 주소 (넣으면 시트+Gmail로 받아요)
 const FARM_PHONE = "010-2679-9101";
 const BANK = "농협 351-1413-9606-83";            // 입금 계좌 (예금주 달성팜)
 const PAY_HOURS = 24;                            // 입금 기한 (주문 후 몇 시간)
@@ -798,6 +799,11 @@ $("next-btn").onclick = () => { if (step === 1) setStep(2); else submitOrder(); 
 
 /* 보내기: 메일, 안 되면 문자 */
 async function sendMail(data){
+  if (SHEET_URL){
+    /* 구글 시트로 한 번만 보내요. 인터넷이 끊기면 오류가 나서 문자 보내기 화면으로 넘어가요 */
+    await fetch(SHEET_URL, { method:"POST", mode:"no-cors", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(data) });
+    return;
+  }
   const r = await fetch("https://formsubmit.co/ajax/" + ORDER_EMAIL, {
     method:"POST", headers:{ "Content-Type":"application/json", "Accept":"application/json" }, body: JSON.stringify(data)
   });
