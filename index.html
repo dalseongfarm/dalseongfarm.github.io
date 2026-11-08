@@ -335,6 +335,29 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
 @media (max-width:720px){.detail{top:0;bottom:0;left:0;right:0;transform:none;width:100%;border-radius:0;padding-top:env(safe-area-inset-top,0px)}.detail-body{padding:18px 16px 26px}}
 #dscrim{z-index:21}
 
+/* 후기 */
+.rv-summary{display:flex;align-items:baseline;justify-content:center;gap:10px;margin-bottom:14px}
+.rv-avg{font-family:var(--serif);font-size:40px;color:var(--berry);line-height:1}
+.rv-stars{color:#E8A317;letter-spacing:2px;font-size:18px}
+.rv-tabs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:18px}
+.rv-tabs button{border:1px solid var(--line);background:var(--surface);border-radius:6px;padding:7px 14px;font-size:14px;cursor:pointer}
+.rv-tabs button[aria-selected="true"]{background:var(--berry);border-color:var(--berry);color:var(--on-berry)}
+.rv-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
+.rv{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:8px;min-width:0}
+.rv-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.rv-top .rv-stars{font-size:15px}
+.rv-tag{font-size:12px;background:var(--berry-soft);color:var(--berry);border-radius:6px;padding:2px 8px}
+.rv p{font-size:15px;white-space:pre-line;overflow-wrap:anywhere}
+.rv-meta{font-size:13px;color:var(--muted)}
+.rv-empty{grid-column:1/-1;text-align:center;color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:28px 16px}
+#rv-more{display:block;margin:16px auto 0}
+.rv-form{max-width:640px;margin:28px auto 0}
+.rv-form h3{font-size:20px}
+.rv-pick{display:flex;gap:4px}
+.rv-pick button{border:0;background:none;font-size:32px;line-height:1;color:var(--line);cursor:pointer;padding:2px}
+.rv-pick button.on{color:#E8A317}
+@media (max-width:900px){.rv-list{grid-template-columns:1fr}}
+
 /* 장바구니 */
 .scrim{position:fixed;inset:0;background:color-mix(in srgb,var(--ink) 40%,transparent);z-index:20}
 .drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--bg);z-index:21;display:flex;flex-direction:column;box-shadow:-1px 0 0 var(--line);padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
@@ -389,6 +412,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
       <li><a href="#calendar">농장 달력</a></li>
       <li><a href="#story">농장 이야기</a></li>
       <li><a href="#experience">딸기 체험</a></li>
+      <li><a href="#reviews">후기</a></li>
       <li><a href="#faq">자주 묻는 질문</a></li>
     </ul>
     <button class="cart-btn" type="button" id="open-cart" aria-label="장바구니 열기">
@@ -667,6 +691,47 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         <div id="exp-result" hidden></div>
       </form>
     </div>
+  </div>
+</section>
+
+<section id="reviews">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Reviews</p>
+      <h2>달성팜 후기</h2>
+      <p>딸기, 크런치바, 수확체험을 경험하신 분들의 이야기예요.</p>
+    </div>
+    <div class="rv-summary" id="rv-summary" hidden><span class="rv-avg" id="rv-avg"></span><span class="rv-stars" id="rv-avg-stars"></span><span class="small" id="rv-count"></span></div>
+    <div class="rv-tabs" role="tablist" aria-label="후기 상품 고르기">
+      <button type="button" role="tab" aria-selected="true" data-rv="전체">전체</button>
+      <button type="button" role="tab" aria-selected="false" data-rv="딸기">딸기</button>
+      <button type="button" role="tab" aria-selected="false" data-rv="크런치바">크런치바</button>
+      <button type="button" role="tab" aria-selected="false" data-rv="수확체험">수확체험</button>
+    </div>
+    <div class="rv-list" id="rv-list"><p class="rv-empty">후기를 불러오는 중이에요…</p></div>
+    <button class="btn" type="button" id="rv-more" hidden>후기 더 보기</button>
+
+    <form class="panel rv-form" id="rv-form" novalidate>
+      <h3>후기 남기기</h3>
+      <p class="small">남겨주신 후기는 농장에서 확인한 뒤 홈페이지에 올라가요. 이름은 첫 글자만 보여요.</p>
+      <div class="row2">
+        <label class="field"><span>이름 *</span><input type="text" id="rv-name" autocomplete="name" maxlength="20"></label>
+        <label class="field"><span>상품 *</span>
+          <select id="rv-product"><option>딸기</option><option>크런치바</option><option>수확체험</option></select>
+        </label>
+      </div>
+      <fieldset>
+        <legend>별점 *</legend>
+        <div class="rv-pick" id="rv-pick" role="radiogroup" aria-label="별점">
+          <button type="button" role="radio" aria-checked="false" data-star="1" aria-label="1점">★</button><button type="button" role="radio" aria-checked="false" data-star="2" aria-label="2점">★</button><button type="button" role="radio" aria-checked="false" data-star="3" aria-label="3점">★</button><button type="button" role="radio" aria-checked="false" data-star="4" aria-label="4점">★</button><button type="button" role="radio" aria-checked="true" data-star="5" aria-label="5점">★</button>
+        </div>
+      </fieldset>
+      <label class="field"><span>후기 * (10자 이상)</span><textarea id="rv-text" maxlength="500" placeholder="맛, 포장, 배송, 체험은 어떠셨나요?"></textarea></label>
+      <label class="field"><span>연락처 (선택, 공개 안 됨)</span><input type="tel" id="rv-phone" autocomplete="tel" placeholder="010-0000-0000"></label>
+      <input type="text" id="rv-hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+      <button class="btn primary" type="submit" id="rv-submit">후기 보내기</button>
+      <div id="rv-result" hidden></div>
+    </form>
   </div>
 </section>
 
@@ -1249,6 +1314,71 @@ $("exp-form").addEventListener("submit", async e => {
 });
 
 renderCart(); renderExp();
+
+/* 후기 */
+let reviews = [], rvFilter = "전체", rvShown = 6, rvStar = 5;
+const starStr = n => "★★★★★".slice(0, n) + "☆☆☆☆☆".slice(0, 5 - n);
+function renderReviews(){
+  const list = $("rv-list"); list.innerHTML = "";
+  const rows = reviews.filter(r => rvFilter === "전체" || r.product === rvFilter);
+  if (!rows.length){
+    const p = document.createElement("p"); p.className = "rv-empty";
+    p.textContent = reviews.length ? "이 상품의 후기는 아직 없어요." : "아직 올라온 후기가 없어요. 첫 후기를 남겨주세요!";
+    list.appendChild(p);
+  }
+  rows.slice(0, rvShown).forEach(r => {
+    const a = document.createElement("article"); a.className = "rv";
+    const top = document.createElement("div"); top.className = "rv-top";
+    const st = document.createElement("span"); st.className = "rv-stars"; st.textContent = starStr(Math.max(1, Math.min(5, r.stars)));
+    st.setAttribute("aria-label", `별점 ${r.stars}점`);
+    const tg = document.createElement("span"); tg.className = "rv-tag"; tg.textContent = r.product;
+    top.append(st, tg);
+    const tx = document.createElement("p"); tx.textContent = r.text;
+    const mt = document.createElement("span"); mt.className = "rv-meta"; mt.textContent = `${r.name} · ${r.date}`;
+    a.append(top, tx, mt); list.appendChild(a);
+  });
+  $("rv-more").hidden = rows.length <= rvShown;
+  if (reviews.length){
+    const avg = reviews.reduce((x, r) => x + r.stars, 0) / reviews.length;
+    $("rv-avg").textContent = avg.toFixed(1); $("rv-avg-stars").textContent = starStr(Math.round(avg));
+    $("rv-count").textContent = `후기 ${reviews.length}개`; $("rv-summary").hidden = false;
+  }
+}
+async function loadReviews(){
+  if (!SHEET_URL){ renderReviews(); return; }
+  try{
+    const r = await fetch(SHEET_URL + "?action=reviews");
+    const j = await r.json();
+    reviews = (j.reviews || []).filter(x => x && x.text);
+  }catch(e){ reviews = []; }
+  renderReviews();
+}
+document.querySelectorAll("[data-rv]").forEach(b => b.addEventListener("click", () => {
+  rvFilter = b.dataset.rv; rvShown = 6;
+  document.querySelectorAll("[data-rv]").forEach(x => x.setAttribute("aria-selected", String(x === b)));
+  renderReviews();
+}));
+$("rv-more").onclick = () => { rvShown += 6; renderReviews(); };
+function paintStars(){ document.querySelectorAll("#rv-pick button").forEach(b => { const n = +b.dataset.star; b.classList.toggle("on", n <= rvStar); b.setAttribute("aria-checked", String(n === rvStar)); }); }
+document.querySelectorAll("#rv-pick button").forEach(b => b.addEventListener("click", () => { rvStar = +b.dataset.star; paintStars(); }));
+paintStars();
+$("rv-form").addEventListener("submit", async e => {
+  e.preventDefault();
+  const r = $("rv-result"), name = $("rv-name").value.trim(), text = $("rv-text").value.trim();
+  if (!name || text.length < 10){ r.hidden = false; r.className = "result warn"; r.textContent = !name ? "이름을 입력해 주세요." : "후기를 10자 이상 써 주세요."; return; }
+  const data = { _subject:`[달성팜] 새 후기 - ${name} (${$("rv-product").value} ${rvStar}점)`, "_hp":$("rv-hp").value,
+    "구분":"후기", "이름":name, "상품":$("rv-product").value, "별점":rvStar, "후기":text };
+  if ($("rv-phone").value.trim()) data["연락처"] = $("rv-phone").value.trim();
+  const b = $("rv-submit"); b.disabled = true; b.textContent = "보내는 중…";
+  try{
+    await sendMail(data);
+    r.hidden = false; r.className = "result"; r.textContent = "후기 고마워요! 농장에서 확인한 뒤 홈페이지에 올릴게요.";
+    $("rv-text").value = ""; rvStar = 5; paintStars();
+  }catch(err){
+    r.hidden = false; r.className = "result warn"; r.textContent = "지금은 후기가 전송되지 않았어요. 잠시 뒤에 다시 시도하거나 인스타그램 @dal_seong_farm으로 보내주세요.";
+  }finally{ b.disabled = false; b.textContent = "후기 보내기"; }
+});
+loadReviews();
 
 /* 영상은 화면에 보일 때만 재생 */
 try{
