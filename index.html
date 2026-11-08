@@ -891,7 +891,7 @@ async function submitOrder(){
 
 /* 체험 예약 */
 const expQty = { adult:0, child:0 };
-for (let h = 10; h < 18; h++){ if (h === 12) continue;  // 점심시간 12~1시 const o = document.createElement("option"); o.textContent = `${h}:00 ~ ${h+1}:00`; $("exp-time").appendChild(o); }
+for (let h = 10; h < 18; h++){ if (h === 12) continue; /* 점심시간 12~1시 */ const o = document.createElement("option"); o.textContent = `${h}:00 ~ ${h+1}:00`; $("exp-time").appendChild(o); }
 const today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
 $("exp-date").min = today.toISOString().slice(0,10);
 function renderExp(){
