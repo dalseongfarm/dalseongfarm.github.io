@@ -549,7 +549,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
       <div class="box">
         <h3>배송</h3>
         <ul>
-          <li>딸기는 수확일에 맞춰 발송하고, 다음 날 도착해요. 일요일은 택배가 쉬어요.</li>
+          <li>딸기는 수확한 날 바로 발송하고, 다음 날 도착해요. 토요일과 일요일에는 택배를 보내지 않아요.</li>
           <li>목포·남악은 1kg 상자를 농장에서 직접 가져다드려요. 직배송비는 따로 없어요.</li>
           <li>입금이 확인된 주문부터 차례로 보내드려요.</li>
         </ul>
@@ -673,7 +673,7 @@ const DIRECT_FEE = 0;                         // 목포·남악 직배송비
 const EXP_PRICE = 20000;                         // 체험비 1인 정상가
 // 딸기 수확 예정일 ("연-월-일"). 주문한 날 다음의 가장 가까운 수확일로 예상 배송일을 보여줘요.
 const HARVEST_DATES = [];
-const NO_HARVEST_TEXT = "첫 수확은 12월 예정이에요. 수확일이 정해지면 문자로 배송일을 안내드려요.";
+const NO_HARVEST_TEXT = "첫 수확은 12월 초 예정이에요. 수확일이 정해지면 문자로 배송일을 안내드려요.";
 const PRODUCTS = {
   berry: { name:"딸기 선물용 750g 내외", directName:"딸기 1kg (목포·남악 직배송)", price:30000 },
   bar:   { name:"딸기 단백질 크런치바 (10개입)", price:9900 }
@@ -717,9 +717,16 @@ function deliveryInfo(){
   if (!h) return { text: NO_HARVEST_TEXT, short: "" };
   const m = shipMethod();
   if (m === "택배"){
-    const arr = new Date(h); arr.setDate(arr.getDate() + 1);
+    /* 토·일은 택배를 보내지 않아요: 주말에 딴 딸기는 택배로 보내지 않고 다음 평일 수확분으로 보내요 */
+    let ship = new Date(h);
+    while (ship.getDay() === 0 || ship.getDay() === 6){
+      const next = HARVEST_DATES.map(v => new Date(v + "T00:00:00")).filter(d => d > ship && d.getDay() !== 0 && d.getDay() !== 6).sort((a,b) => a - b)[0];
+      if (!next) return { text: NO_HARVEST_TEXT, short: "" };
+      ship = next;
+    }
+    const arr = new Date(ship); arr.setDate(arr.getDate() + 1);
     if (arr.getDay() === 0) arr.setDate(arr.getDate() + 1);
-    return { text: `${fmt(h)} 수확해서 바로 발송 → ${fmt(arr)} 도착 예정`, short: `${fmt(arr)} 도착 예정` };
+    return { text: `${fmt(ship)} 수확해서 바로 발송 → ${fmt(arr)} 도착 예정`, short: `${fmt(arr)} 도착 예정` };
   }
   if (m === "목포·남악 직배송") return { text: `${fmt(h)} 수확한 날 직접 가져다드려요`, short: `${fmt(h)} 직배송 예정` };
   return { text: `${fmt(h)} 수확한 날부터 농장에서 받아가실 수 있어요`, short: `${fmt(h)}부터 수령 가능` };
@@ -729,7 +736,7 @@ function deliveryInfo(){
 (function(){
   const h = nextHarvest();
   $("berry-badge").textContent = h ? "판매중" : "예약중";
-  $("berry-eta-card").textContent = h ? `다음 수확 ${fmt(h)}` : "12월 첫 수확 · 지금 예약 주문 받아요";
+  $("berry-eta-card").textContent = h ? `다음 수확 ${fmt(h)}` : "12월 초 첫 수확 · 지금 예약 주문 받아요";
 })();
 
 /* 장바구니 */
