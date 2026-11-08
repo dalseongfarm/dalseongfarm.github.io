@@ -370,7 +370,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         </div>
         <div class="bd">
           <h3>딸기 수확체험</h3>
-          <p class="opt">1시간 안팎 · 딴 딸기 500g 포장</p>
+          <p class="opt">1시간 안팎 · 입장료 포함 · 딴 딸기 500g 포장</p>
           <div class="price"><s>20,000원</s><b>18,000원</b><small>1인</small></div>
           <p class="small">월요일 휴무 · 단체 최대 100명</p>
           <div class="act"><a class="btn primary" href="#experience">체험 예약하기</a></div>
@@ -452,8 +452,8 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         <h3>가족도, 단체도<br>함께 따는 딸기</h3>
         <dl>
           <dt>기간</dt><dd>2월 말 – 5월 (월요일 휴무)</dd>
-          <dt>시간</dt><dd>오전 10시 – 오후 6시, 1시간 안팎</dd>
-          <dt>체험비</dt><dd>1인 20,000원 → 홈페이지 예약 18,000원</dd>
+          <dt>시간</dt><dd>오전 10시 – 오후 6시, 1시간 안팎<br>점심시간 12시 – 1시 제외</dd>
+          <dt>체험비</dt><dd>1인 20,000원 → 홈페이지 예약 18,000원<br>입장료 포함, 따로 받지 않아요</dd>
           <dt>포함</dt><dd>딴 딸기 500g 포장</dd>
           <dt>단체</dt><dd>최대 100명 · 같은 요금</dd>
           <dt>취소</dt><dd>전날 50%, 당일·노쇼 100% 수수료</dd>
@@ -513,8 +513,8 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
       </div>
       <div class="faq-group">
         <h3>수확체험</h3>
-        <details><summary>체험은 언제, 얼마나 걸리나요?</summary><p>2월 말부터 5월까지, 오전 10시부터 오후 6시 사이에 운영해요. 한 번 체험은 1시간 안에 끝나고, 월요일은 쉬어요.</p></details>
-        <details><summary>체험비는 얼마인가요?</summary><p>1인 20,000원이고, 단체도 같은 요금이에요. 홈페이지로 예약하시면 10% 할인된 18,000원이에요.</p></details>
+        <details><summary>체험은 언제, 얼마나 걸리나요?</summary><p>2월 말부터 5월까지, 오전 10시부터 오후 6시 사이에 운영해요. 점심시간(12시~1시)과 월요일은 쉬어요. 한 번 체험은 1시간 안에 끝나요.</p></details>
+        <details><summary>체험비는 얼마인가요?</summary><p>1인 20,000원이고, 단체도 같은 요금이에요. 입장료가 포함된 금액이라 따로 입장료는 없어요. 홈페이지로 예약하시면 10% 할인된 18,000원이에요.</p></details>
         <details><summary>비 오는 날에도 할 수 있나요?</summary><p>체험은 딸기 하우스 안에서 하기 때문에 날씨와 상관없이 진행해요.</p></details>
         <details><summary>딴 딸기는 가져갈 수 있나요?</summary><p>네. 직접 딴 딸기 500g을 담아 가실 수 있어요.</p></details>
         <details><summary>예약을 취소하면 수수료가 있나요?</summary><p>체험 전날 취소하시면 체험비의 50%, 당일 취소하시거나 연락 없이 오지 않으시면 100%가 취소 수수료로 발생해요.</p></details>
@@ -891,7 +891,7 @@ async function submitOrder(){
 
 /* 체험 예약 */
 const expQty = { adult:0, child:0 };
-for (let h = 10; h < 18; h++){ const o = document.createElement("option"); o.textContent = `${h}:00 ~ ${h+1}:00`; $("exp-time").appendChild(o); }
+for (let h = 10; h < 18; h++){ if (h === 12) continue;  // 점심시간 12~1시 const o = document.createElement("option"); o.textContent = `${h}:00 ~ ${h+1}:00`; $("exp-time").appendChild(o); }
 const today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
 $("exp-date").min = today.toISOString().slice(0,10);
 function renderExp(){
