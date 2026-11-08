@@ -380,7 +380,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
     </div>
     <div class="months" id="months"></div>
     <div class="legend">
-      <span><i class="dotc s"></i>딸기 수확</span><span><i class="dotc e"></i>수확체험</span><span><i class="dotc p"></i>딸기 준비</span><span><i class="dotc m"></i>멜론</span><span><i class="dotc r"></i>벼</span>
+      <span><i class="dotc s"></i>딸기 수확</span><span><i class="dotc e"></i>수확체험</span><span><i class="dotc m"></i>딸기 모종</span><span><i class="dotc p"></i>딸기 키우기</span><span><i class="dotc r"></i>벼</span>
     </div>
     <div class="mdetail" id="mdetail" aria-live="polite"></div>
   </div>
@@ -660,18 +660,18 @@ const PRODUCTS = {
   berry: { name:"딸기 선물용 750g 내외", directName:"딸기 1kg (목포·남악 직배송)", price:30000 },
   bar:   { name:"딸기 단백질 크런치바 (10개입)", price:9900 }
 };
-// 농장 달력: s 딸기 수확, e 수확체험, p 딸기 준비, m 멜론, r 벼
+// 농장 달력: s 딸기 수확, e 수확체험, m 딸기 모종, p 딸기 키우기, r 벼
 const MONTHS = [
   { k:"딸기 수확", t:["s"], d:["딸기 수확과 택배 발송"], buy:"딸기, 크런치바" },
   { k:"딸기 수확", t:["s"], d:["딸기 수확과 택배 발송"], buy:"딸기, 크런치바" },
   { k:"딸기·체험", t:["s","e"], d:["딸기 수확과 택배 발송","2월 말부터 수확체험 시작"], buy:"딸기, 크런치바, 수확체험" },
   { k:"딸기·체험", t:["s","e"], d:["딸기 수확과 택배 발송","수확체험 운영 (월요일 휴무)"], buy:"딸기, 크런치바, 수확체험" },
   { k:"딸기·체험", t:["s","e"], d:["올해 마지막 딸기 수확","수확체험 마무리"], buy:"딸기, 크런치바, 수확체험" },
-  { k:"쉬어가기", t:[], d:["하우스 정리와 다음 농사 준비"], buy:"크런치바" },
-  { k:"멜론", t:["m"], d:["여름 멜론 재배"], buy:"크런치바" },
-  { k:"멜론", t:["m"], d:["여름 멜론 재배"], buy:"크런치바" },
-  { k:"멜론·준비", t:["m","p"], d:["멜론 마무리","딸기 모종 준비"], buy:"크런치바" },
-  { k:"벼·준비", t:["r","p"], d:["벼 수확","딸기 모종 심기"], buy:"크런치바" },
+  { k:"모종 시작", t:["m"], d:["딸기 수확을 마친 하우스 정리","내년 딸기 모종 기르기 시작"], buy:"크런치바" },
+  { k:"딸기 모종", t:["m"], d:["내년 딸기 모종 기르기"], buy:"크런치바" },
+  { k:"딸기 모종", t:["m"], d:["내년 딸기 모종 기르기"], buy:"크런치바" },
+  { k:"딸기 심기", t:["m","p"], d:["튼튼하게 키운 모종을 하우스에 심기"], buy:"크런치바" },
+  { k:"벼·딸기", t:["r","p"], d:["벼 수확","심은 딸기 뿌리 내리고 자라는 시기"], buy:"크런치바, 딸기 사전 주문" },
   { k:"딸기 키우기", t:["p"], d:["딸기 꽃 피고 열매 맺는 시기","딸기 사전 주문 받기"], buy:"딸기 사전 주문, 크런치바" },
   { k:"첫 수확", t:["s"], d:["첫 딸기 수확 시작"], buy:"딸기, 크런치바" }
 ];
