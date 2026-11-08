@@ -56,6 +56,7 @@ button{font:inherit;color:inherit}
 .btn:hover{filter:brightness(.96)}
 .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
 .small{font-size:13px;color:var(--muted)}
+.hl{color:var(--berry);font-weight:700}
 
 /* 상단 */
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
@@ -390,7 +391,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         </div>
         <div class="bd">
           <h3>달성팜 딸기</h3>
-          <p class="opt">택배: 난좌 트레이 750g 내외 · 목포·남악 직배송: 스티로폼 1kg</p>
+          <p class="opt">택배(전국, 목포·남악 포함): 난좌 750g 내외<br>목포·남악 <b class="hl">당일 직배송</b>: 오늘 딴 딸기 1kg, 배송비 없음</p>
           <div class="price"><s>30,000원</s><b>27,000원</b><small>택배비 포함</small></div>
           <p class="small" id="berry-eta-card"></p>
           <div class="act"><button class="btn primary" type="button" data-add="berry">장바구니 담기</button></div>
@@ -400,7 +401,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         <div class="ph"><span class="badge new">NEW</span><img src="img/crunch-box.jpg" alt="달성팜 단백질 크런치바 딸기맛 10개입 상자" loading="lazy"></div>
         <div class="bd">
           <h3>딸기 단백질 크런치바</h3>
-          <p class="opt">딸기맛 · 10개입 (100g)</p>
+          <p class="opt">딸기맛 · 10개입 (100g)<br>택배 · 목포·남악 <b class="hl">총알배송</b>(+2,000원) · 농장 방문</p>
           <div class="price"><s>9,900원</s><b>8,910원</b><small>택배비 포함</small></div>
           <p class="small">농부가 직접 기획한 딸기맛 간식</p>
           <div class="act"><button class="btn primary" type="button" data-add="bar">장바구니 담기</button></div>
@@ -572,7 +573,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         <h3>딸기 · 주문</h3>
         <details><summary>딸기는 언제 받을 수 있나요?</summary><p>주문하신 날 이후 가장 가까운 수확일에 따서 바로 보내드려요. 장바구니에서 예상 배송일을 확인할 수 있어요.</p></details>
         <details><summary>결제는 어떻게 하나요?</summary><p>주문서나 예약 신청을 보내신 뒤 농협 351-1413-9606-83 (달성팜)으로 입금해 주세요. 입금이 확인되면 주문과 예약이 확정되고 문자로 알려드려요. 24시간 안에 입금이 없으면 취소돼요.</p></details>
-        <details><summary>택배비가 따로 있나요?</summary><p>딸기와 크런치바는 택배비가 포함된 가격이에요. 목포·남악은 1kg 상자를 직접 가져다드려요. 직배송비는 따로 없어요.</p></details>
+        <details><summary>택배비가 따로 있나요?</summary><p>딸기와 크런치바는 택배비가 포함된 가격이에요. 목포·남악은 수확한 날 1kg 상자를 직접 가져다드리는 당일 직배송도 있어요(배송비 없음). 크런치바만 받으실 때는 총알배송비 2,000원이 붙어요. 목포·남악도 택배로 받으실 수 있어요.</p></details>
         <details><summary>받은 딸기는 어떻게 보관하나요?</summary><p>받으시면 바로 냉장고에 넣어 주세요. 드시기 직전에 씻고, 꼭지는 씻은 뒤에 떼어 주세요. 2~3일 안에 드시면 가장 맛있어요.</p></details>
         <details><summary>딸기가 눌리거나 상해서 왔어요.</summary><p>받으신 날 상자와 딸기 사진을 찍어 문자로 보내주세요. 확인한 뒤 교환이나 환불을 안내드릴게요.</p></details>
       </div>
@@ -602,7 +603,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
             <thead><tr><th scope="col">항목</th><th scope="col">딸기</th><th scope="col">크런치바</th></tr></thead>
             <tbody>
               <tr><th scope="row">품목</th><td>딸기 (생과)</td><td>딸기맛 단백질 크런치바</td></tr>
-              <tr><th scope="row">용량</th><td>750g 내외 (직배송 1kg)</td><td>100g (10g × 10개)</td></tr>
+              <tr><th scope="row">용량</th><td>750g 내외 (당일 직배송 1kg)</td><td>100g (10g × 10개)</td></tr>
               <tr><th scope="row">생산자 · 제조원</th><td>달성팜 (전남 신안군 팔금면)</td><td>(주)새롬푸드테크농업회사법인</td></tr>
               <tr><th scope="row">원산지</th><td>국내산 (전남 신안)</td><td>상자 표시 참고</td></tr>
               <tr><th scope="row">수확 · 제조일</th><td>발송일 당일 수확</td><td>상자 표시 참고</td></tr>
@@ -615,7 +616,8 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
         <h3>배송</h3>
         <ul>
           <li>딸기는 수확한 날 바로 발송하고, 다음 날 도착해요. 토요일과 일요일에는 택배를 보내지 않아요.</li>
-          <li>목포·남악은 1kg 상자를 농장에서 직접 가져다드려요. 직배송비는 따로 없어요.</li>
+          <li>목포·남악은 <b>당일 직배송</b>도 돼요. 아침에 딴 딸기 1kg을 그날 직접 가져다드리고, 배송비는 없어요.</li>
+          <li>크런치바만 주문하시면 목포·남악 <b>총알배송</b>(+2,000원)으로 빠르게 가져다드려요.</li>
           <li>입금이 확인된 주문부터 차례로 보내드려요.</li>
         </ul>
         <h3>교환 · 반품</h3>
@@ -670,10 +672,11 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
     <fieldset id="ship-set">
       <legend>받으시는 방법</legend>
       <div class="choices">
-        <label><input type="radio" name="ship" id="ship-parcel" value="택배" checked><span>택배</span></label>
-        <label><input type="radio" name="ship" id="ship-direct" value="목포·남악 직배송"><span>목포·남악 직배송 (1kg)</span></label>
+        <label><input type="radio" name="ship" id="ship-parcel" value="택배" checked><span>택배 (전국)</span></label>
+        <label><input type="radio" name="ship" id="ship-direct" value="목포·남악 직배송"><span id="direct-label">목포·남악 당일 직배송</span></label>
         <label><input type="radio" name="ship" id="ship-pickup" value="농장 방문 수령"><span>농장 방문 수령</span></label>
       </div>
+      <p class="small" id="ship-help"></p>
       <div class="eta" id="eta" hidden>
         <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3 10h18M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="15" r="2" fill="currentColor"/></svg>
         <div><b>딸기 예상 배송</b><span id="eta-text"></span></div>
@@ -718,7 +721,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
     <div class="tot" id="tot">
       <div><span>정상가</span><span id="t-list">0원</span></div>
       <div class="dc"><span>직거래 할인 10%</span><span id="t-dc">-0원</span></div>
-      <div id="t-ship-row" hidden><span>직배송비</span><span>+2,000원</span></div>
+      <div id="t-ship-row" hidden><span>총알배송비</span><span>+2,000원</span></div>
       <div class="final"><span>결제 금액</span><span id="t-final">0원</span></div>
     </div>
     <button class="btn primary" type="button" id="next-btn" disabled>주문서 쓰기</button>
@@ -734,13 +737,13 @@ const FARM_PHONE = "010-2679-9101";
 const BANK = "농협 351-1413-9606-83";            // 입금 계좌 (예금주 달성팜)
 const PAY_HOURS = 24;                            // 입금 기한 (주문 후 몇 시간)
 const DISCOUNT = 0.10;                           // 홈페이지 직거래 할인율
-const DIRECT_FEE = 0;                         // 목포·남악 직배송비
+const EXPRESS_FEE = 2000;                        // 크런치바만 목포·남악 총알배송할 때 (딸기와 함께면 무료)
 const EXP_PRICE = 20000;                         // 체험비 1인 정상가
 // 딸기 수확 예정일 ("연-월-일"). 주문한 날 다음의 가장 가까운 수확일로 예상 배송일을 보여줘요.
 const HARVEST_DATES = [];
 const NO_HARVEST_TEXT = "첫 수확은 12월 초 예정이에요. 수확일이 정해지면 문자로 배송일을 안내드려요.";
 const PRODUCTS = {
-  berry: { name:"딸기 선물용 750g 내외", directName:"딸기 1kg (목포·남악 직배송)", price:30000 },
+  berry: { name:"딸기 선물용 750g 내외", directName:"딸기 1kg (목포·남악 당일 직배송)", price:30000 },
   bar:   { name:"딸기 단백질 크런치바 (10개입)", price:9900 }
 };
 // 농장 달력: s 딸기 수확, e 수확체험, m 딸기 모종, p 딸기 키우기
@@ -793,7 +796,7 @@ function deliveryInfo(){
     if (arr.getDay() === 0) arr.setDate(arr.getDate() + 1);
     return { text: `${fmt(ship)} 수확해서 바로 발송 → ${fmt(arr)} 도착 예정`, short: `${fmt(arr)} 도착 예정` };
   }
-  if (m === "목포·남악 직배송") return { text: `${fmt(h)} 수확한 날 직접 가져다드려요`, short: `${fmt(h)} 직배송 예정` };
+  if (m === "목포·남악 직배송") return { text: `${fmt(h)} 아침에 딴 딸기를 그날 바로 가져다드려요 (당일 직배송)`, short: `${fmt(h)} 당일 직배송` };
   return { text: `${fmt(h)} 수확한 날부터 농장에서 받아가실 수 있어요`, short: `${fmt(h)}부터 수령 가능` };
 }
 
@@ -809,7 +812,7 @@ function totals(){
   let list = 0, fin = 0;
   for (const k in cart){ list += PRODUCTS[k].price * cart[k]; fin += off(PRODUCTS[k].price) * cart[k]; }
   const count = cart.berry + cart.bar;
-  const ship = (count && shipMethod() === "목포·남악 직배송") ? DIRECT_FEE : 0;
+  const ship = (count && !cart.berry && shipMethod() === "목포·남악 직배송") ? EXPRESS_FEE : 0;
   return { list, fin, ship, pay: fin + ship, count };
 }
 function renderCart(){
@@ -837,6 +840,12 @@ function renderCart(){
   $("eta").hidden = !cart.berry; $("eta-text").textContent = info.text;
   $("t-list").textContent = won(t.list); $("t-dc").textContent = "-" + won(t.list - t.fin);
   $("t-ship-row").hidden = !t.ship; $("t-final").textContent = won(t.pay);
+  $("direct-label").textContent = cart.berry ? "목포·남악 당일 직배송" : "목포·남악 총알배송 (+2,000원)";
+  const m = shipMethod();
+  $("ship-help").textContent =
+    m === "택배" ? "전국 어디나 받으실 수 있어요. 목포·남악도 택배로 받을 수 있어요." :
+    m === "목포·남악 직배송" ? (cart.berry ? "목포·남악 한정이에요. 수확한 날 1kg 상자를 직접 가져다드리고, 배송비는 없어요. 크런치바도 함께 가져다드려요." : "목포·남악 한정이에요. 농장에서 직접 빠르게 가져다드려요 (배송비 2,000원).") :
+    "농장(팔금면 삼층석탑길 194)에 오셔서 받아가세요. 받으실 시간은 문자로 안내드려요.";
   $("next-btn").disabled = !t.count;
   $("addr-field").hidden = shipMethod() === "농장 방문 수령";
 }
@@ -922,7 +931,7 @@ async function submitOrder(){
     "구분":"상품 주문", "상태":"입금 대기", "이름":$("name").value.trim(), "입금자명":($("payer").value.trim() || $("name").value.trim()), "연락처":$("phone").value.trim(), "주문 내역":items,
     "정상가":won(t.list), "직거래 할인(10%)":"-" + won(t.list - t.fin)
   };
-  if (t.ship) data["직배송비"] = won(t.ship);
+  if (t.ship) data["총알배송비"] = won(t.ship);
   data["입금할 금액"] = won(t.pay);
   const due = deadline(); data["입금 기한"] = due;
   data["받는 방법"] = shipMethod();
