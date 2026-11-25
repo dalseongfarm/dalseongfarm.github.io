@@ -955,6 +955,7 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
       <h3>주문서가 접수됐어요</h3>
       <p>아래 계좌로 입금해 주세요. <b>입금이 확인되면 주문이 확정</b>되고 문자로 알려드려요.</p>
       <div class="pay">
+        <div><span>주문번호</span><b id="done-id"></b></div>
         <div><span>입금할 금액</span><b id="done-amount">0원</b></div>
         <div><span>입금 계좌</span><b id="done-bank"></b></div>
         <div><span>예금주</span><b>달성팜</b></div>
@@ -963,6 +964,8 @@ footer .copy{grid-column:1/-1;font-size:12px;border-top:1px dashed var(--line);p
       </div>
       <p class="small">기한까지 입금이 없으면 주문이 취소돼요.</p>
       <button class="btn primary" type="button" id="copy-pay">계좌와 금액 복사</button>
+      <button class="btn" type="button" id="paid-btn">입금했어요 (농장에 알리기)</button>
+      <div id="paid-result" hidden></div>
       <p class="small" id="done-eta"></p>
     </div>
   </div>
@@ -1184,16 +1187,29 @@ $("next-btn").onclick = () => { if (step === 1) setStep(2); else submitOrder(); 
 
 /* 보내기: 메일, 안 되면 문자 */
 async function sendMail(data){
-  if (SHEET_URL){
-    /* 구글 시트로 한 번만 보내요. 인터넷이 끊기면 오류가 나서 문자 보내기 화면으로 넘어가요 */
-    await fetch(SHEET_URL, { method:"POST", mode:"no-cors", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(data) });
-    return;
+  /* 구글 시트가 {success:true}로 답해야만 성공으로 봐요. 답이 없으면 오류 → 문자 보내기 화면 */
+  if (!SHEET_URL) throw new Error("주문 받는 곳이 설정되지 않았어요");
+  const ctl = new AbortController(); const tm = setTimeout(() => ctl.abort(), 20000);
+  try{
+    const r = await fetch(SHEET_URL, { method:"POST", body: JSON.stringify(data), signal: ctl.signal });
+    let j = null; try{ j = await r.json(); }catch(e){}
+    if (!j || j.success !== true) throw new Error((j && j.message) || ("시트 응답 확인 안 됨 [" + r.status + "]"));
+    return j;
+  } finally { clearTimeout(tm); }
+}
+const makeId = () => { const d = new Date(); const c = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let r = ""; for (let i = 0; i < 4; i++) r += c[Math.floor(Math.random()*c.length)]; return `DS${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}-${r}`; };
+/* 손님이 "입금했어요"를 누르면 농장에 알림 */
+async function notifyPaid(info, box, btn){
+  btn.disabled = true; btn.textContent = "알리는 중…";
+  const data = { _subject:`[달성팜][입금알림] ${info.id} - ${info.name} ${info.amount}`, "구분":"입금 알림", "주문번호":info.id, "주문 구분":info.kind, "이름":info.name, "입금자명":info.payer, "입금한 금액":info.amount, "연락처":info.phone };
+  try{
+    await sendMail(data);
+    box.hidden = false; box.className = "result ok"; box.textContent = "농장에 입금 소식을 알렸어요. 통장을 확인한 뒤 확정 문자를 드릴게요.";
+    btn.textContent = "입금 알림 완료";
+  }catch(err){
+    btn.disabled = false; btn.textContent = "입금했어요 (농장에 알리기)";
+    smsFallback(box, "입금 알림", data, err, "");
   }
-  const r = await fetch("https://formsubmit.co/ajax/" + ORDER_EMAIL, {
-    method:"POST", headers:{ "Content-Type":"application/json", "Accept":"application/json" }, body: JSON.stringify(data)
-  });
-  let j = {}; try{ j = await r.json(); }catch(e){}
-  if (!r.ok || String(j.success) === "false") throw new Error((j.message || "응답 없음") + " [" + r.status + "]");
 }
 function smsFallback(box, label, data, err, extra){
   const text = `[달성팜 ${label}]\n` + Object.entries(data).filter(([k]) => !k.startsWith("_") && k !== "구분").map(([k,v]) => `${k}: ${v}`).join("\n");
@@ -1230,9 +1246,11 @@ async function submitOrder(){
   if (!$("agree").checked) missing.push("개인정보 수집 동의");
   if (missing.length){ res.hidden = false; res.className = "result warn"; res.textContent = missing.join(", ") + "을(를) 입력해 주세요."; return; }
   const items = Object.keys(cart).filter(k => cart[k]).map(k => `${nameOf(k)} × ${cart[k]} = ${won(lineTotal(k))}` + (k === "bar" && eventQty() ? ` (이벤트가 ${eventQty()}박스 포함)` : "")).join("\n");
+  const orderId = makeId();
   const data = {
-    _subject: `[달성팜][입금대기] 주문 - ${$("name").value.trim()}`, _template:"table", _captcha:"false",
-    "구분":"상품 주문", "상태":"입금 대기", "이름":$("name").value.trim(), "입금자명":($("payer").value.trim() || $("name").value.trim()), "연락처":$("phone").value.trim(), "주문 내역":items,
+    _subject: `[달성팜][새 주문] ${orderId} - ${$("name").value.trim()} ${won(t.pay)}`,
+    "구분":"상품 주문", "주문번호":orderId, "상태":"입금 대기", "이름":$("name").value.trim(), "입금자명":($("payer").value.trim() || $("name").value.trim()), "연락처":$("phone").value.trim(), "주문 내역":items,
+    "딸기(상자)":cart.berry || 0, "크런치바(박스)":cart.bar || 0,
     "정상가":won(t.list)
   };
   if (t.ev) data["딸기 구매 이벤트"] = "-" + won(t.ev);
@@ -1247,7 +1265,10 @@ async function submitOrder(){
   const btn = $("next-btn"); btn.disabled = true; btn.textContent = "보내는 중…";
   try{
     await sendMail(data);
+    $("done-id").textContent = orderId;
     $("done-amount").textContent = won(t.pay); $("done-bank").textContent = BANK;
+    const pb = $("paid-btn"); pb.disabled = false; pb.textContent = "입금했어요 (농장에 알리기)"; $("paid-result").hidden = true;
+    pb.onclick = () => notifyPaid({ id:orderId, kind:"상품 주문", name:data["이름"], payer:data["입금자명"], amount:won(t.pay), phone:data["연락처"] }, $("paid-result"), pb);
     $("done-payer").textContent = data["입금자명"]; $("done-deadline").textContent = due;
     $("done-eta").textContent = cart.berry ? "딸기 " + (deliveryInfo().short || "배송일은 문자로 안내드려요") : "";
     $("copy-pay").onclick = () => copyText(`${BANK} 달성팜 ${won(t.pay)}`, $("done-bank"), $("copy-pay"));
@@ -1319,12 +1340,12 @@ $("exp-form").addEventListener("submit", async e => {
   if (missing.length){ r.hidden = false; r.className = "result warn"; r.textContent = missing.join(", ") + "을(를) 입력해 주세요."; return; }
   const dp = expDateProblem($("exp-date").value);
   if (dp){ r.hidden = false; r.className = "result warn"; r.textContent = dp; return; }
-  const n = expQty.adult + expQty.child, pay = off(EXP_PRICE) * n;
+  const n = expQty.adult + expQty.child, pay = off(EXP_PRICE) * n, expId = makeId();
   const data = {
-    _subject:`[달성팜][입금대기] 체험 예약 - ${$("exp-name").value.trim()}`, _template:"table", _captcha:"false",
-    "구분":"수확체험 예약", "상태":"입금 대기", "이름":$("exp-name").value.trim(), "입금자명":($("exp-payer").value.trim() || $("exp-name").value.trim()), "연락처":$("exp-phone").value.trim(),
+    _subject:`[달성팜][새 체험 예약] ${expId} - ${$("exp-name").value.trim()} ${won(pay)}`,
+    "구분":"수확체험 예약", "주문번호":expId, "상태":"입금 대기", "이름":$("exp-name").value.trim(), "입금자명":($("exp-payer").value.trim() || $("exp-name").value.trim()), "연락처":$("exp-phone").value.trim(),
     "체험 날짜":$("exp-date").value, "시간":$("exp-time").value, "구분(단체)":document.querySelector('input[name="group"]:checked').value,
-    "인원":`어른 ${expQty.adult}명, 어린이 ${expQty.child}명`, "정상가":won(EXP_PRICE * n), "직거래 할인(10%)":"-" + won(EXP_PRICE * n - pay), "입금할 금액":won(pay)
+    "인원":`어른 ${expQty.adult}명, 어린이 ${expQty.child}명`, "총 인원(명)":n, "정상가":won(EXP_PRICE * n), "직거래 할인(10%)":"-" + won(EXP_PRICE * n - pay), "입금할 금액":won(pay)
   };
   const due = deadline(); data["입금 기한"] = due;
   if ($("exp-memo").value.trim()) data["요청사항"] = $("exp-memo").value.trim();
@@ -1336,13 +1357,16 @@ $("exp-form").addEventListener("submit", async e => {
     const h = document.createElement("b"); h.textContent = "예약 신청이 접수됐어요";
     const p = document.createElement("p"); p.textContent = `아래 계좌로 입금해 주세요. 입금이 확인되면 예약이 확정되고 문자로 알려드려요.`;
     const box = document.createElement("div"); box.className = "pay";
-    [["입금할 금액", won(pay)], ["입금 계좌", BANK], ["예금주", "달성팜"], ["입금자명", data["입금자명"]], ["입금 기한", due]].forEach(([k,v]) => {
+    [["주문번호", expId], ["입금할 금액", won(pay)], ["입금 계좌", BANK], ["예금주", "달성팜"], ["입금자명", data["입금자명"]], ["입금 기한", due]].forEach(([k,v]) => {
       const d = document.createElement("div"); const a = document.createElement("span"); a.textContent = k; const bb = document.createElement("b"); bb.textContent = v; d.append(a, bb); box.appendChild(d);
     });
     const c = document.createElement("button"); c.type = "button"; c.className = "btn primary"; c.textContent = "계좌와 금액 복사";
     c.onclick = () => copyText(`${BANK} 달성팜 ${won(pay)}`, box, c);
     const n2 = document.createElement("p"); n2.className = "small"; n2.textContent = "기한까지 입금이 없으면 예약이 취소돼요.";
-    r.append(st, h, p, box, c, n2);
+    const pb = document.createElement("button"); pb.type = "button"; pb.className = "btn"; pb.textContent = "입금했어요 (농장에 알리기)";
+    const pr = document.createElement("div"); pr.hidden = true;
+    pb.onclick = () => notifyPaid({ id:expId, kind:"수확체험 예약", name:data["이름"], payer:data["입금자명"], amount:won(pay), phone:data["연락처"] }, pr, pb);
+    r.append(st, h, p, box, c, pb, pr, n2);
     expQty.adult = expQty.child = 0; renderExp();
   }catch(err){
     smsFallback(r, "수확체험 예약", data, err, ` 입금 계좌: ${BANK} (달성팜) · 입금할 금액 ${won(pay)} · ${due} 입금해 주시면 확인 후 예약이 확정돼요.`);
@@ -1428,6 +1452,5 @@ try{
   }
 }catch(e){}
 </script>
-
 </body>
 </html>
